@@ -17,12 +17,12 @@ for iiii = 0:0
             % 원하는 실험마다 'I', 'A' 등으로 바꾸는 듯
             p = 'I'; % 수정해야함
             
-            % 실제 CSI 로그파일 경로 지정
+            % 실제 CSI 로그파일 경로 지정, csi 데이터 받음
             % 예) './csi_250227_I'
             s = sprintf('./csi_250227_%s', p);
             
             % read_bf_file() : Wi-Fi 측정 로그를 읽어서
-            % csi_trace라는 Cell Array로 반환해줌
+            % csi_trace라는 csi maxtrix 을 만듦
             csi_trace = read_bf_file(s);
 
             % 아래는 결과물을 저장할 파일 이름
@@ -44,8 +44,8 @@ for iiii = 0:0
 
             % ant = 3 : 안테나 개수를 3개로 가정
             ant = 3;
-            % csi_matrices : (패킷 수 x 3(안테나) x 3(미사용?) x 30(서브캐리어)) 형태
-            csi_matrices = zeros(k, ant, 3, 30);
+            % csi_matrices : (패킷 수 x 3(TX 안테나) x 3(RX 안테나) x 30(서브캐리어)) 형태
+            csi_matrices = zeros(k, ant, 3, 30); 
 
             % ntemp : (코드 상에서 직접 활용은 안 하지만) 중간 위상 보정 등에 쓰였던 흔적
             ntemp = zeros(k,3,30);
@@ -67,7 +67,8 @@ for iiii = 0:0
                 temp2 = zeros(30,3);
 
                 % csi_trace{i}.csi의 크기를 확인
-                % 일반적으로 (3 x 30) 혹은 (N x 30) 형태가 될 수 있음
+                % i: 1~13994 움직임
+                % m = 1, n = 90
                 [m,n] = size(csi_trace{i}.csi);
 
                 % csi_matrices(i, 1:m, :, :) = csi_trace{i}.csi;
